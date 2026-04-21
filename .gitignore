@@ -10,3 +10,5 @@
 *.dylib
 build/
 cmake-build-*/
+output.txt
+main
