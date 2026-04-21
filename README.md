@@ -86,3 +86,4 @@ int main() {
 }
 ```
 Ce code crée un carré vert qui se déplace horizontalement sur un fond rouge à 30 images par seconde.
+test
