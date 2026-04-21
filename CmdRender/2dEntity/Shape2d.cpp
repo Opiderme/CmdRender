@@ -11,7 +11,7 @@ pair<int, int> parseCoord(const string& s) {
     return {x, y};
 }
 
-Shape2d::Shape2d(string f, int px, int py, int w, int h, vector<int> color, vector<int> colorFill) : positionX(px), positionY(py), forme(f), width(w), height(h), color(color), colorFill(colorFill) {
+Shape2d::Shape2d(string f, int px, int py, int w, int h, vector<int> color, vector<int> colorFill) : forme(f), positionX(px), positionY(py), width(w), height(h), color(color), colorFill(colorFill) {
     if (f.empty()) {
         std::cerr << "File name cannot be empty." << std::endl;
         return;
@@ -67,7 +67,7 @@ Shape2d::Shape2d(string f, int px, int py, int w, int h, vector<int> color, vect
     cout << endl;
     //std::cout << "Shape data read from file: " << FOLDER_2D_ENTITY + this->forme + ".cmdr : " << shapeData << std::endl;
 }
-Shape2d::Shape2d(string f, int px, int py, int w, int h, vector<int> color, vector<int> colorFill, vector<pair<int, int>>& pts) : forme(f), width(w), height(h), points(pts), color(color), colorFill(colorFill) {
+Shape2d::Shape2d(string f, int px, int py, int w, int h, vector<int> color, vector<int> colorFill, vector<pair<int, int>>& pts) : forme(f), positionX(px), positionY(py), width(w), height(h), points(pts), color(color), colorFill(colorFill) {
     if (f.empty()) {
         std::cerr << "File name cannot be empty." << std::endl;
         return;

@@ -1,13 +1,24 @@
 #include "fileInteract.h"
+#include <dirent.h>
 
 const std::vector<std::string> getFilenamesWithoutExtension(const std::string& path) {
     std::vector<std::string> filenames;
 
-    for (const auto& entry : fs::directory_iterator(path)) {
-        if (entry.is_regular_file()) {
-            // .stem() donne le nom sans l’extension
-            filenames.push_back(entry.path().stem().string());
+    DIR* dir;
+    struct dirent* ent;
+    if ((dir = opendir(path.c_str())) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            std::string filename = ent->d_name;
+            if (filename != "." && filename != "..") {
+                size_t lastdot = filename.find_last_of(".");
+                if (lastdot == std::string::npos) {
+                    filenames.push_back(filename);
+                } else {
+                    filenames.push_back(filename.substr(0, lastdot));
+                }
+            }
         }
+        closedir(dir);
     }
 
     return filenames;

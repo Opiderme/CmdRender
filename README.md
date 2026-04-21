@@ -21,7 +21,19 @@
 
 Un `Makefile` est fourni pour simplifier la compilation. Assurez-vous d'avoir `g++` ou un compilateur compatible C++17 installé.
 
-### Avec Make (Recommandé)
+### Sur Windows (Recommandé)
+
+1. Ouvrez votre terminal (PowerShell ou Invite de commandes) à la racine du projet.
+2. Compilez le projet en exécutant le script fourni :
+   ```powershell
+   .\lauch.bat
+   ```
+3. Exécutez le programme généré :
+   ```powershell
+   .\main.exe
+   ```
+
+### Sur Linux/macOS avec Make
 
 1. Ouvrez votre terminal à la racine du projet.
 2. Compilez le projet en tapant :
@@ -32,18 +44,17 @@ Un `Makefile` est fourni pour simplifier la compilation. Assurez-vous d'avoir `g
    ```bash
    ./main
    ```
-   *(Sur Windows, l'exécutable généré pourrait s'appeler `main.exe` en fonction de votre environnement).*
 
-Pour nettoyer les fichiers de build, exécutez :
+Pour nettoyer les fichiers de build (via Make), exécutez :
 ```bash
 make clean
 ```
 
 ### Compilation manuelle avec g++
 
-Si vous n'avez pas `make`, vous pouvez compiler directement (exemple) :
+Si vous n'avez ni `make` ni `lauch.bat`, vous pouvez compiler directement (exemple) :
 ```bash
-g++ -Wall -Wextra -std=c++17 -o main main.cpp CmdRender/CmdRender.cpp CmdRender/2dEntity/Shape2d.cpp
+g++ -Wall -Wextra -std=c++17 -o main main.cpp CmdRender/CmdRender.cpp CmdRender/2dEntity/Shape2d.cpp CmdRender/utils/fileInteract.cpp
 ```
 
 ## Exemple d'Utilisation
