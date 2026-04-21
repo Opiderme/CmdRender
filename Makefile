@@ -1,13 +1,13 @@
-# Nom de l'exécutable
+# Noms des exécutables
 TARGET = main
+TEST_TARGET = test_render
 
 # Compilateur et flags
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17 -static-libgcc -static-libstdc++
 
-# Dossiers sources
-SRC_DIRS = . \
-           CmdRender \
+# Dossiers sources (hors fichiers contenant `main`)
+SRC_DIRS = CmdRender \
            CmdRender/2dEntity \
            CmdRender/utils
 
@@ -18,10 +18,13 @@ SRCS := $(wildcard $(addsuffix /*.cpp,$(SRC_DIRS)))
 OBJS := $(SRCS:.cpp=.o)
 
 # Règle par défaut
-all: $(TARGET)
+all: $(TARGET) $(TEST_TARGET)
 
 # Edition de liens
-$(TARGET): $(OBJS)
+$(TARGET): $(OBJS) main.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+$(TEST_TARGET): $(OBJS) test_render.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Compilation des .cpp en .o
@@ -30,7 +33,7 @@ $(TARGET): $(OBJS)
 
 # Nettoyage
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) main.o test_render.o $(TARGET) $(TEST_TARGET)
 
 # Rebuild complet
 re: clean all
