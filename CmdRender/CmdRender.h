@@ -14,6 +14,7 @@ public:
     int width;
     int height;
     vector<vector<vector<int>>> screen;
+    vector<vector<vector<int>>> previousScreen;
 
     CmdRender(string n, int w, int h, vector<int> color);
     ~CmdRender();
