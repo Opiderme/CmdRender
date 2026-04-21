@@ -16,14 +16,22 @@ void CmdRender::show(int fps) {
     oss << "\033[H"; // Replace cursor at top-left
 
     // Génération de l'écran coloré en une seule passe
+    int lastR = -1, lastG = -1, lastB = -1;
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             const auto& rgb = screen[y][x];
-            oss << "\033[38;2;"
-                << rgb[0] << ";" << rgb[1] << ";" << rgb[2]
-                << "mA"; // caractère affiché
+            if (rgb[0] != lastR || rgb[1] != lastG || rgb[2] != lastB) {
+                oss << "\033[38;2;"
+                    << rgb[0] << ";" << rgb[1] << ";" << rgb[2]
+                    << "m";
+                lastR = rgb[0];
+                lastG = rgb[1];
+                lastB = rgb[2];
+            }
+            oss << "A"; // caractère affiché
         }
         oss << "\033[0m\n"; // Reset couleur + retour à la ligne
+        lastR = -1; lastG = -1; lastB = -1; // Reset last color because of "\033[0m"
     }
 
     // Affichage en une fois (beaucoup plus rapide)
