@@ -1,6 +1,6 @@
 #include "CmdRender.h"
 
-CmdRender::CmdRender(string n, int w, int h, vector<int> color) : name(n), width(w), height(h), screen(h, vector<vector<int>>(w, color)) {  
+CmdRender::CmdRender(string n, int w, int h, vector<int> color) : name(n), width(w), height(h), screen(h, vector<vector<int>>(w, color)), previousScreen(h, vector<vector<int>>(w, {-1, -1, -1})) {
 }
 
 CmdRender::~CmdRender() {
@@ -13,29 +13,39 @@ void CmdRender::show(int fps) {
     auto start = high_resolution_clock::now();
 
     std::ostringstream oss;
-    oss << "\033[H"; // Replace cursor at top-left
 
-    // Génération de l'écran coloré en une seule passe
+    // Dynamic Terminal Output: only render changed pixels
     int lastR = -1, lastG = -1, lastB = -1;
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             const auto& rgb = screen[y][x];
-            if (rgb[0] != lastR || rgb[1] != lastG || rgb[2] != lastB) {
-                oss << "\033[38;2;"
-                    << rgb[0] << ";" << rgb[1] << ";" << rgb[2]
-                    << "m";
-                lastR = rgb[0];
-                lastG = rgb[1];
-                lastB = rgb[2];
-            }
-            oss << "A"; // caractère affiché
-        }
-        oss << "\033[0m\n"; // Reset couleur + retour à la ligne
-        lastR = -1; lastG = -1; lastB = -1; // Reset last color because of "\033[0m"
-    }
+            const auto& prevRgb = previousScreen[y][x];
 
-    // Affichage en une fois (beaucoup plus rapide)
-    std::cout << oss.str() << std::flush;
+            // Only output if the pixel color has changed
+            if (rgb != prevRgb) {
+                // Move cursor to specific position (ANSI coordinates are 1-based)
+                oss << "\033[" << (y + 1) << ";" << (x + 1) << "H";
+
+                if (rgb[0] != lastR || rgb[1] != lastG || rgb[2] != lastB) {
+                    oss << "\033[38;2;"
+                        << rgb[0] << ";" << rgb[1] << ";" << rgb[2]
+                        << "m";
+                    lastR = rgb[0];
+                    lastG = rgb[1];
+                    lastB = rgb[2];
+                }
+                oss << "A"; // caractère affiché
+
+                // Update previous screen
+                previousScreen[y][x] = rgb;
+            }
+        }
+    }
+    // We only output if there were any changes
+    if (!oss.str().empty()) {
+        oss << "\033[0m"; // Reset couleur at the very end
+        std::cout << oss.str() << std::flush;
+    }
 
     // Synchronisation à la bonne durée d'une frame
     auto end = high_resolution_clock::now();
